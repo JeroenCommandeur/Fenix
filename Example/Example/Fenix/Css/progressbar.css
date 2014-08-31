@@ -1,0 +1,62 @@
+﻿
+.progressbar1 {
+    width: 100%;
+    height: 5px;
+    max-height: 5px;
+    background-color: #eee;
+    /*padding: 1px;*/
+    /*margin: .6em 0;*/
+    /*margin: 0px 6px 0px 0px;*/
+    /*border: 1px #000 double;*/
+    /*display: inline-block;*/
+    vertical-align: top;
+    clear: right;
+}
+
+.progress1 {
+    background: #7aaad3; /*-- Color of the bar --*/
+    height: 5px;
+    max-height: 5px;
+    width: 0%;
+    max-width: 100%;
+    float: left;
+    -webkit-animation: progress 2s 1 forwards ;
+    -moz-animation: progress 2s 1 forwards ;
+    animation: progress 2s 1 forwards ;
+}
+
+.pbaranim1 {
+    height: 5px;
+    width: 100%;
+    overflow: hidden;
+    background: url('progressbar.gif') repeat-x;
+    -moz-opacity: 0.25;
+    -khtml-opacity: 0.25;
+    opacity: 0.25;
+    -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=25)';
+    filter: alpha(opacity=25);
+    }
+
+@-webkit-keyframes progress { 
+    from { }
+
+    to { width: 100% }
+}
+
+@-moz-keyframes progress { 
+    from { }
+
+    to { width: 100% }
+}
+
+@-ms-keyframes progress { 
+    from { }
+
+    to { width: 100% }
+}
+
+@keyframes progress { 
+    from { }
+
+    to { width: 100% }
+}

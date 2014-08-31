@@ -26,7 +26,8 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -34,3 +35,16 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+Fenix.js
+Fenix.js.map
+Example.js
+Example.js.map
+*.suo
+*.user
+_ReSharper.*
+[Bb]in/
+[Oo]bj/
+
+*.Debug.config
+*.Release.config

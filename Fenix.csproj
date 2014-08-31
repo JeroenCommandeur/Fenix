@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{27F29F60-13AB-4AD0-ABB4-5E420E190D9C}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Css\messagebar.css" />
+    <Content Include="Css\progressbar.css" />
+    <Content Include="Css\progressbar.gif" />
+    <Content Include="Templates\View.html" />
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.md" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\jquery.d.ts" />
+    <TypeScriptCompile Include="Fenix.ts" />
+    <TypeScriptCompile Include="Interfaces\IBinder.ts" />
+    <TypeScriptCompile Include="Interfaces\IDataContext.ts" />
+    <TypeScriptCompile Include="Interfaces\IPlaceholderViewModel.ts" />
+    <TypeScriptCompile Include="Interfaces\IView.ts" />
+    <TypeScriptCompile Include="Interfaces\IViewModel.ts" />
+    <TypeScriptCompile Include="Enums\MessageTypeEnum.ts" />
+    <TypeScriptCompile Include="Base\DataContextBase.ts" />
+    <TypeScriptCompile Include="Types\BindingParser.ts" />
+    <TypeScriptCompile Include="Types\BindingContext.ts" />
+    <TypeScriptCompile Include="Types\Message.ts" />
+    <TypeScriptCompile Include="Types\TemplateManager.ts" />
+    <TypeScriptCompile Include="Types\Utilities.ts" />
+    <TypeScriptCompile Include="Types\Navigator.ts" />
+    <TypeScriptCompile Include="Base\BinderBase.ts" />
+    <TypeScriptCompile Include="Base\ViewModelBase.ts" />
+    <TypeScriptCompile Include="Base\PlaceholderViewModelBase.ts" />
+    <TypeScriptCompile Include="Base\ViewBase.ts" />
+    <TypeScriptCompile Include="Binders\ViewModelBinder.ts" />
+    <TypeScriptCompile Include="Binders\NavigationBinder.ts" />
+    <TypeScriptCompile Include="Binders\VisibilityBinder.ts" />
+    <TypeScriptCompile Include="Binders\AnimatorBinder.ts" />
+    <TypeScriptCompile Include="Binders\ButtonBinder.ts" />
+    <TypeScriptCompile Include="Binders\CleanBinder.ts" />
+    <TypeScriptCompile Include="Binders\ColorBinder.ts" />
+    <TypeScriptCompile Include="Binders\EnableBinder.ts" />
+    <TypeScriptCompile Include="Binders\HyperLinkBinder.ts" />
+    <TypeScriptCompile Include="Binders\LabelBinder.ts" />
+    <TypeScriptCompile Include="Binders\ListBinder.ts" />
+    <TypeScriptCompile Include="Binders\TextBinder.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Output\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Fenix</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>52567</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:55378/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptOutFile>Output\Fenix.js</TypeScriptOutFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(ProjectDir)Output\*.*" "$(ProjectDir)Example\Example\Fenix\Scripts\"</PostBuildEvent>
+  </PropertyGroup>
+</Project>
