@@ -42,9 +42,6 @@ module Fenix.Base {
 
         private CreateView(viewName: string, namespace: string, htmlFullName: string, wrapView: boolean): IView {
 
-            //var name = "Client.Parts.Editor.ViewModels.EditorViewModel";
-            //this.Editor = new window["DeleD"]["Parts"]["Editor"]["Client"]["ViewModels"]["EditorViewModel"];
-
             var instance = null;
             instance = window;
             var elements = namespace.split(".");

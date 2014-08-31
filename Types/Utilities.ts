@@ -5,8 +5,6 @@
 
         public static CreateViewModel(viewmodelName: string, params?: any): IViewModel {
 
-            //var name = "Client.Parts.Editor.ViewModels.EditorViewModel";
-            //this.Editor = new window["DeleD"]["Parts"]["Editor"]["Client"]["ViewModels"]["EditorViewModel"];
             var namespace: string = Fenix.Framework.ViewModels[viewmodelName];
 
             if (!namespace)
@@ -76,7 +74,6 @@
                 }
             }
         }
-
 
 
         public static StartsWith(source: string, prefix: string): boolean {
