@@ -10,7 +10,7 @@
         public SomeText: string;
 
         public OnViewLoaded() {
-            this.SomeText = "this is a nested view";    // setting the text programmatically also triggers the binding code.
+            this.SomeText = "This text was set in the viewmodel and the view was updated automatically.";    // setting the text programmatically also triggers the binding code.
         }
     }
 } 
