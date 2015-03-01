@@ -8,10 +8,11 @@ module Fenix.Base {
         public ExecutionContext: any;
         public DataContext: IDataContext;
         public Element: JQuery;
-        private Binding: string;
-        
+
+        private binding: string;
+
         // Helper object to get values from bindings.
-        private bindingParser: Fenix.Types.BindingParser;
+        private bindingParser: Types.BindingParser;
 
         private isBound: boolean;
 
@@ -25,18 +26,18 @@ module Fenix.Base {
         private changeEventName: string;
 
 
-        static AttributeName(): string {
+        public static AttributeName(): string {
             // Contains the name of the attribute to be used on bound elements. Implement in descendants.
             return "";
         }
 
 
-        public Bind(element: JQuery, dataContext: any, executionContext: any, attribute: string) {
+        public Bind(element: JQuery, dataContext: IDataContext, executionContext: any, attribute: string) {
 
             this.Element = element;
             this.DataContext = dataContext;
             this.ExecutionContext = executionContext;
-            this.Binding = element.attr(attribute);
+            this.binding = element.attr(attribute);
 
             this.OnInitialize();
 
@@ -45,15 +46,13 @@ module Fenix.Base {
             // Use namespacing by appending a guid to the event name when setting up eventhandlers, so we can uniquely remove them when needed.
             // This is needed because multiple binders can be at work for one datacontext at a time. Using namespacing, we can savely remove 
             // eventhandlers for a single binder, instead of removing handlers from all binders.
-            this.changeEventName = "change." + Fenix.Types.Utilities.NewGuid();
+            this.changeEventName = "change." + Types.Utilities.NewGuid();
 
-            // HouseNumber 
-            // LastPost.Date
-            // LastPost.Author.Address.Street
+            var viewModel: IViewModel;
 
-            // To provide deep binding, we need to setup a chain of eventhandlers to monitor changes
-            // in any of the properties listed in the binding, leading up to the actual property we see on screen.
-            //
+            // To provide deep binding (Person.Address.Street etc), we need to setup a chain of eventhandlers to monitor
+            // changes in any of the properties listed in the binding, leading up to the actual property we see on screen.
+            
             // If any of these properties change, we need to set a new eventhandler to the new object and unbind
             // any existing handler to the old object. For example: Author was set to a specific author object and an
             // eventhandler was set to monitor change in this particular author. Now Author is changed to null or to 
@@ -64,10 +63,14 @@ module Fenix.Base {
 
             var bindingProperty = this.GetValueByKey("PROPERTY");
 
-            if (!bindingProperty) // If there is no property listed in the binding; attach a datacontext change handler only.
-                $(this.DataContext).on(this.changeEventName, { self: this }, this.OnDataContextChangedHandler); 
-            else // If there is a property binding available, setup a chain of eventhandlers to listed to change of the property.
+            if (bindingProperty) {
+                // If there is a property binding available, setup a chain of eventhandlers to listen to change of the property.
                 this.SetupEventHandlers(this.DataContext, 0);
+
+            } else {
+                // If there is no property listed in the binding; attach a datacontext change handler only.
+                $(this.DataContext).on(this.changeEventName, { self: this }, this.OnDataContextChangedHandler);
+            }
 
             this.isBound = true;
         }
@@ -76,43 +79,30 @@ module Fenix.Base {
         public Unbind() {
             if (!this.isBound)
                 return;
-            
+
+            // Allow descendants to clean up for themselves.
+            this.OnUnbind();
+
             // Remove eventhandlers from datacontexts.
             this.RemoveEventHandlers();
 
-            // Remove html from screen; this will also remove eventhandlers bound to the element and its childs
+            // Remove html from screen; this will also remove eventhandlers bound to the element and its childs.
             this.Element.html(null);
 
             this.isBound = false;
         }
 
 
-        public GetValueByKey(key: string): string {
-            if (!this.bindingParser)
-                this.bindingParser = new Fenix.Types.BindingParser(this.Binding);
-
-            return this.bindingParser.GetValueByKey(key);
+        public OnUnbind() {
+            // Clean up any binder specific objects/events etc. Implement in descendants.
         }
 
 
-        private RemoveEventHandlers() {
-            // Remove change handler for the main datacontext itself.
-            $(this.DataContext).off(this.changeEventName);
-
-            // Remove change handlers setup for any deep-bound property (Person.Address.Street etc).
-            for (var key in this.dataContextStore) {
-                var dataContext = this.dataContextStore[key];
-                $(dataContext).off(this.changeEventName);
-            }
-            this.dataContextStore = {};
-        }
-
-
-        private SetupEventHandlers(dataContext: any, index: number) {
+        private SetupEventHandlers(dataContext: IDataContext, index: number) {
 
             var bindingProperty = this.GetValueByKey("PROPERTY");
             var elements = bindingProperty.split(".");
-            var propertyName;
+            var propertyName: string;
 
             // Remove all handlers starting from the given index.
             for (var i = index; i < elements.length; i++) {
@@ -121,7 +111,6 @@ module Fenix.Base {
                 if (existingDataContext) {
                     $(existingDataContext).off(this.changeEventName);
                     this.dataContextStore[propertyName] = null;
-                    existingDataContext = null;
                 }
             }
 
@@ -136,18 +125,31 @@ module Fenix.Base {
             index++;
             if (index < elements.length) {
                 var nextDataContext = dataContext[propertyName];
-                if (!nextDataContext) {
-                    this.OnPropertyChange(null);
-                } else {
-                    if (typeof nextDataContext === "object")
-                        this.SetupEventHandlers(nextDataContext, index);
-                }
+                if (nextDataContext !== undefined && typeof nextDataContext === "object")
+                    this.SetupEventHandlers(nextDataContext, index);
             } else {
-                // Trigger event for the last property in the chain; the one we're interested in particular.
+                // Trigger event for the last property in the chain even if it doesn't have a value.
+                // It's the one we're interested in particular and descendants decide what to do with it.
                 var value = dataContext[propertyName];
-                if (!(typeof value === "function"))     // Trigger change event if it's a property and even if it doesn't have a value; descendants decide what to do with it.
+                if (!(typeof value === "function"))
                     this.OnPropertyChange(value);
             }
+        }
+
+
+        private RemoveEventHandlers() {
+            // Remove change handler for the main datacontext itself.
+            $(this.DataContext).off(this.changeEventName);
+
+            // Remove change handlers setup for any deep-bound property (Person.Address.Street etc).
+            var dataContextStore = this.dataContextStore;
+            for (var key in dataContextStore) {
+                if (dataContextStore.hasOwnProperty(key)) {
+                    var dataContext = dataContextStore[key];
+                    $(dataContext).off(this.changeEventName);
+                }
+            }
+            this.dataContextStore = {};
         }
 
 
@@ -166,7 +168,7 @@ module Fenix.Base {
 
             // If the property specified in our binding (if any) has changed, notify.
             var index = self.GetIndex(property);
-            if (index != -1) {
+            if (index !== -1) {
                 // The given property is part of the binding. NOTE: this could go wrong in particular cases
                 // where the datacontext has more properties with the same name. For example, a datacontext 
                 // has the following properties:
@@ -186,10 +188,18 @@ module Fenix.Base {
         }
 
 
+        public GetValueByKey(key: string): string {
+            if (!this.bindingParser)
+                this.bindingParser = new Types.BindingParser(this.binding);
+
+            return this.bindingParser.GetValueByKey(key);
+        }
+
+
         private IsActualProperty(property: string): boolean {
             var bindingProperty = this.GetValueByKey("PROPERTY");
             var elements = bindingProperty.split(".");
-            return elements[elements.length - 1] == property;
+            return elements[elements.length - 1] === property;
         }
 
 

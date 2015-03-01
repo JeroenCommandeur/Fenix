@@ -2,15 +2,15 @@ module Fenix.Types {
 
     export class BindingParser {
 
-        private keyValues: any;
+        public KeyValues: any;
 
         constructor(binding: string) {
-            this.keyValues = this.GetBindingKeyValues(binding);
+            this.KeyValues = this.GetBindingKeyValues(binding);
         }
 
         public GetValueByKey(key: string) {
-            for (var i = 0; i < this.keyValues.length; i++) {
-                var pair = this.keyValues[i];
+            for (var i = 0; i < this.KeyValues.length; i++) {
+                var pair = this.KeyValues[i];
                 if (pair.key == key.toUpperCase()) {
                     return pair.value;
                 }
